@@ -5,7 +5,8 @@ local player = Players.LocalPlayer
 
 -- 👑 quem pode criar key
 local keyCreators = {
-	["mirezolve"] = true
+	["mirezolve"] = true,
+	["FeshGrago_9852"] = true
 }
 
 -- 🔊 som
