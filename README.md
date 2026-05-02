@@ -31,6 +31,7 @@ local staffList = {
 	["21peteca"] = true,
 	["usxrch"] = true,
 	["mano_bute1"] = true
+	["Leviamol"] = true
 }
 
 -- 📋 keys
