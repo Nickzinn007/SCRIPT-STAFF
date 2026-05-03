@@ -25,11 +25,17 @@ soundAlert.Volume = 0.7
 -- ⏰ tempo
 local EXPIRATION_TIME = 3600
 
--- 📋 staff
+-- 📋 staff (ATUALIZADA)
 local staffList = {
+	["suahbeybe paxta"] = true,
+	["swyssous"] = true,
+	["bfdhhhhuh"] = true,
+	["lindosvaldo65"] = true,
+	["felipedarcel6"] = true,
+
+	-- antigos mantidos
 	["yammeleite paxta"] = true,
 	["suahleite paxta"] = true,
-	["swyssous"] = true,
 	["betoogsl"] = true,
 	["joaozin823863"] = true,
 	["botzin"] = true,
@@ -40,16 +46,12 @@ local staffList = {
 	["21peteca"] = true,
 	["usxrch"] = true,
 	["mano_bute1"] = true,
-
-	-- 🔥 NOVOS
 	["SlowlylNotBack"] = true,
 	["sptmatheus"] = true,
-	["lindosvaldo65"] = true,
 	["dglancaperfume"] = true,
 	["t3ynzz"] = true,
 	["ZVNErqguxMp"] = true
 }
-
 -- 📋 keys
 local validKeys = {
 	["ABC123"] = true,
