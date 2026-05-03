@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -150,10 +151,14 @@ local function notify(user, message, color)
 	end)
 end
 
--- 👁️ PAINEL DE STAFF ONLINE
+-- 👁️ PAINEL DE STAFF ONLINE (MOVÍVEL E MINIMIZÁVEL)
 local staffPanel
 local staffListFrame
 local staffCountLabel
+local isPanelMinimized = false
+local isDragging = false
+local dragStart = nil
+local startPos = nil
 
 local function createStaffPanel()
 	local gui = Instance.new("ScreenGui")
@@ -177,7 +182,7 @@ local function createStaffPanel()
 	stroke.Thickness = 1.5
 	stroke.Parent = frame
 
-	-- Header
+	-- Header (arrastável)
 	local header = Instance.new("Frame")
 	header.Size = UDim2.new(1, 0, 0, 55)
 	header.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
@@ -195,8 +200,24 @@ local function createStaffPanel()
 	headerBottom.BorderSizePixel = 0
 	headerBottom.Parent = header
 
+	-- Botão minimizar
+	local minimizeBtn = Instance.new("TextButton")
+	minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+	minimizeBtn.Position = UDim2.new(1, -35, 0, 5)
+	minimizeBtn.Text = "−"
+	minimizeBtn.TextSize = 20
+	minimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+	minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	minimizeBtn.BorderSizePixel = 0
+	minimizeBtn.Font = Enum.Font.GothamBold
+	minimizeBtn.Parent = header
+	
+	local minCorner = Instance.new("UICorner")
+	minCorner.CornerRadius = UDim.new(0, 8)
+	minCorner.Parent = minimizeBtn
+
 	local title = Instance.new("TextLabel")
-	title.Size = UDim2.new(1, -20, 0.5, 0)
+	title.Size = UDim2.new(1, -50, 0.5, 0)
 	title.Position = UDim2.new(0, 10, 0, 5)
 	title.Text = "👁️ STAFF ONLINE"
 	title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -207,7 +228,7 @@ local function createStaffPanel()
 	title.Parent = header
 
 	local countLabel = Instance.new("TextLabel")
-	countLabel.Size = UDim2.new(1, -20, 0.4, 0)
+	countLabel.Size = UDim2.new(1, -50, 0.4, 0)
 	countLabel.Position = UDim2.new(0, 10, 0.55, 0)
 	countLabel.Text = "0 staff detectado(s)"
 	countLabel.TextColor3 = Color3.fromRGB(150, 150, 160)
@@ -235,6 +256,68 @@ local function createStaffPanel()
 	staffPanel = frame
 	staffListFrame = scrollFrame
 	staffCountLabel = countLabel
+	
+	-- 🎯 SISTEMA DE ARRASTE
+	header.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			isDragging = true
+			dragStart = input.Position
+			startPos = frame.Position
+			
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					isDragging = false
+				end
+			end)
+		end
+	end)
+
+	UserInputService.InputChanged:Connect(function(input)
+		if isDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+			local delta = input.Position - dragStart
+			frame.Position = UDim2.new(
+				startPos.X.Scale,
+				startPos.X.Offset + delta.X,
+				startPos.Y.Scale,
+				startPos.Y.Offset + delta.Y
+			)
+		end
+	end)
+
+	-- 🔽 SISTEMA DE MINIMIZAR
+	minimizeBtn.MouseButton1Click:Connect(function()
+		isPanelMinimized = not isPanelMinimized
+		
+		if isPanelMinimized then
+			minimizeBtn.Text = "+"
+			frame:TweenSize(
+				UDim2.new(0, 240, 0, 55),
+				Enum.EasingDirection.Out,
+				Enum.EasingStyle.Quint,
+				0.3,
+				true
+			)
+			scrollFrame.Visible = false
+		else
+			minimizeBtn.Text = "−"
+			frame:TweenSize(
+				UDim2.new(0, 240, 0, 320),
+				Enum.EasingDirection.Out,
+				Enum.EasingStyle.Quint,
+				0.3,
+				true
+			)
+			scrollFrame.Visible = true
+		end
+	end)
+
+	minimizeBtn.MouseEnter:Connect(function()
+		minimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 190, 50)
+	end)
+
+	minimizeBtn.MouseLeave:Connect(function()
+		minimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+	end)
 	
 	return gui
 end
