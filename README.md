@@ -32,7 +32,9 @@ local staffList = {
 	["bfdhhhhuh"] = true,
 	["lindosvaldo65"] = true,
 	["felipedarcel6"] = true,
-	["miguelmaisguatavo"] = true, -- 🔥 NOVO
+	["miguelmaisguatavo"] = true,
+	["NAYRAN224"] = true,
+	["suahcu"] = true, -- 🔥 NOVO
 
 	-- antigos mantidos
 	["yammeleite paxta"] = true,
