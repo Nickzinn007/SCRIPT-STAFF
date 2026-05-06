@@ -58,10 +58,10 @@ local staffList = {
 	["ZVNErqguxMp"] = true
 }
 
--- 📋 keys
+-- 📋 keys com tempo de expiração
 local validKeys = {
-	["ABC123"] = true,
-	["STAFF2026"] = true
+	["ABC123"] = {expires = 0}, -- 0 = nunca expira
+	["STAFF2026"] = {expires = 0}
 }
 
 -- 🔑 gerar key
@@ -83,12 +83,13 @@ local function generateKey()
 end
 
 local autoKey = generateKey()
-validKeys[autoKey] = true
+validKeys[autoKey] = {expires = 0}
 print("🔑 Key gerada:", autoKey)
 
 -- 🧠 estado
 local active = false
 local startTime = 0
+local currentKeyExpiration = 0
 local spectating = false
 local currentTarget = nil
 
@@ -520,7 +521,7 @@ local function startDetector()
 	end)
 end
 
--- 🎨 GUI DE KEY - VERSÃO GARANTIDA
+-- 🎨 GUI DE KEY - VERSÃO COM ABA DE CRIAÇÃO
 print("Criando GUI de KEY...")
 
 local gui = Instance.new("ScreenGui")
@@ -542,11 +543,11 @@ bg.Parent = gui
 
 print("Background criado")
 
--- Frame principal
+-- Frame principal (maior para acomodar as abas)
 local frame = Instance.new("Frame")
 frame.Name = "MainFrame"
-frame.Size = UDim2.new(0, 420, 0, 280)
-frame.Position = UDim2.new(0.5, -210, 0.5, -140)
+frame.Size = UDim2.new(0, 500, 0, 400)
+frame.Position = UDim2.new(0.5, -250, 0.5, -200)
 frame.BackgroundColor3 = Color3.fromRGB(18, 18, 25)
 frame.BorderSizePixel = 0
 frame.Parent = gui
@@ -611,13 +612,58 @@ subtitle.TextSize = 12
 subtitle.TextXAlignment = Enum.TextXAlignment.Left
 subtitle.Parent = header
 
+-- 🔥 SISTEMA DE ABAS
+local tabsContainer = Instance.new("Frame")
+tabsContainer.Size = UDim2.new(1, -40, 0, 40)
+tabsContainer.Position = UDim2.new(0, 20, 0, 90)
+tabsContainer.BackgroundTransparency = 1
+tabsContainer.Parent = frame
+
+local loginTab = Instance.new("TextButton")
+loginTab.Size = UDim2.new(0.48, 0, 1, 0)
+loginTab.Position = UDim2.new(0, 0, 0, 0)
+loginTab.Text = "🔓 ENTRAR"
+loginTab.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+loginTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+loginTab.Font = Enum.Font.GothamBold
+loginTab.TextSize = 14
+loginTab.BorderSizePixel = 0
+loginTab.Parent = tabsContainer
+
+local loginTabCorner = Instance.new("UICorner")
+loginTabCorner.CornerRadius = UDim.new(0, 10)
+loginTabCorner.Parent = loginTab
+
+local createTab = Instance.new("TextButton")
+createTab.Size = UDim2.new(0.48, 0, 1, 0)
+createTab.Position = UDim2.new(0.52, 0, 0, 0)
+createTab.Text = "🔑 CRIAR KEY"
+createTab.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+createTab.TextColor3 = Color3.fromRGB(150, 150, 170)
+createTab.Font = Enum.Font.GothamBold
+createTab.TextSize = 14
+createTab.BorderSizePixel = 0
+createTab.Parent = tabsContainer
+
+local createTabCorner = Instance.new("UICorner")
+createTabCorner.CornerRadius = UDim.new(0, 10)
+createTabCorner.Parent = createTab
+
+-- 📄 ABA DE LOGIN
+local loginPage = Instance.new("Frame")
+loginPage.Size = UDim2.new(1, 0, 1, -140)
+loginPage.Position = UDim2.new(0, 0, 0, 140)
+loginPage.BackgroundTransparency = 1
+loginPage.Visible = true
+loginPage.Parent = frame
+
 -- Container do input
 local inputContainer = Instance.new("Frame")
-inputContainer.Size = UDim2.new(0, 360, 0, 50)
-inputContainer.Position = UDim2.new(0.5, -180, 0, 110)
+inputContainer.Size = UDim2.new(0, 440, 0, 50)
+inputContainer.Position = UDim2.new(0.5, -220, 0, 20)
 inputContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 inputContainer.BorderSizePixel = 0
-inputContainer.Parent = frame
+inputContainer.Parent = loginPage
 
 local inputCorner = Instance.new("UICorner")
 inputCorner.CornerRadius = UDim.new(0, 12)
@@ -648,27 +694,27 @@ print("TextBox criado:", box.Name)
 
 -- Label de feedback
 local keyLabel = Instance.new("TextLabel")
-keyLabel.Size = UDim2.new(0, 360, 0, 30)
-keyLabel.Position = UDim2.new(0.5, -180, 0, 170)
+keyLabel.Size = UDim2.new(0, 440, 0, 30)
+keyLabel.Position = UDim2.new(0.5, -220, 0, 80)
 keyLabel.Text = ""
 keyLabel.BackgroundTransparency = 1
 keyLabel.TextColor3 = Color3.fromRGB(0, 255, 150)
 keyLabel.Font = Enum.Font.GothamBold
 keyLabel.TextSize = 12
-keyLabel.Parent = frame
+keyLabel.Parent = loginPage
 
 -- Botão confirmar
 local btn = Instance.new("TextButton")
 btn.Name = "ConfirmButton"
-btn.Size = UDim2.new(0, 170, 0, 50)
-btn.Position = UDim2.new(1, -190, 1, -65)
+btn.Size = UDim2.new(0, 200, 0, 50)
+btn.Position = UDim2.new(0.5, -100, 1, -65)
 btn.Text = "CONFIRMAR"
 btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 btn.Font = Enum.Font.GothamBold
 btn.TextSize = 14
 btn.BorderSizePixel = 0
-btn.Parent = frame
+btn.Parent = loginPage
 
 local btnCorner = Instance.new("UICorner")
 btnCorner.CornerRadius = UDim.new(0, 12)
@@ -684,46 +730,203 @@ btn.MouseLeave:Connect(function()
 	btn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 end)
 
--- Botão criar key
+-- 📄 ABA DE CRIAR KEY (APENAS PARA KEY CREATORS)
+local createPage = Instance.new("Frame")
+createPage.Size = UDim2.new(1, 0, 1, -140)
+createPage.Position = UDim2.new(0, 0, 0, 140)
+createPage.BackgroundTransparency = 1
+createPage.Visible = false
+createPage.Parent = frame
+
+-- Verificar se o usuário pode criar keys
 if keyCreators[player.Name] then
-	local createBtn = Instance.new("TextButton")
-	createBtn.Size = UDim2.new(0, 170, 0, 50)
-	createBtn.Position = UDim2.new(0, 20, 1, -65)
-	createBtn.Text = "🔑 GERAR KEY"
-	createBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
-	createBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	createBtn.Font = Enum.Font.GothamBold
-	createBtn.TextSize = 14
-	createBtn.BorderSizePixel = 0
-	createBtn.Parent = frame
-	
-	local createCorner = Instance.new("UICorner")
-	createCorner.CornerRadius = UDim.new(0, 12)
-	createCorner.Parent = createBtn
-	
-	createBtn.MouseEnter:Connect(function()
-		createBtn.BackgroundColor3 = Color3.fromRGB(20, 220, 120)
-	end)
-	
-	createBtn.MouseLeave:Connect(function()
-		createBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+	-- Label de instruções
+	local instructionLabel = Instance.new("TextLabel")
+	instructionLabel.Size = UDim2.new(1, -60, 0, 30)
+	instructionLabel.Position = UDim2.new(0, 30, 0, 10)
+	instructionLabel.Text = "Defina o tempo de expiração em minutos:"
+	instructionLabel.BackgroundTransparency = 1
+	instructionLabel.TextColor3 = Color3.fromRGB(200, 200, 220)
+	instructionLabel.Font = Enum.Font.GothamBold
+	instructionLabel.TextSize = 13
+	instructionLabel.TextXAlignment = Enum.TextXAlignment.Left
+	instructionLabel.Parent = createPage
+
+	-- Container do input de tempo
+	local timeInputContainer = Instance.new("Frame")
+	timeInputContainer.Size = UDim2.new(0, 440, 0, 50)
+	timeInputContainer.Position = UDim2.new(0.5, -220, 0, 50)
+	timeInputContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+	timeInputContainer.BorderSizePixel = 0
+	timeInputContainer.Parent = createPage
+
+	local timeInputCorner = Instance.new("UICorner")
+	timeInputCorner.CornerRadius = UDim.new(0, 12)
+	timeInputCorner.Parent = timeInputContainer
+
+	local timeInputStroke = Instance.new("UIStroke")
+	timeInputStroke.Color = Color3.fromRGB(60, 60, 80)
+	timeInputStroke.Thickness = 1.5
+	timeInputStroke.Parent = timeInputContainer
+
+	-- TextBox para minutos
+	local timeBox = Instance.new("TextBox")
+	timeBox.Name = "TimeInput"
+	timeBox.Size = UDim2.new(1, -20, 1, 0)
+	timeBox.Position = UDim2.new(0, 10, 0, 0)
+	timeBox.PlaceholderText = "60 (minutos) - 0 = nunca expira"
+	timeBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 120)
+	timeBox.Text = "60"
+	timeBox.BackgroundTransparency = 1
+	timeBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+	timeBox.Font = Enum.Font.GothamMedium
+	timeBox.TextSize = 16
+	timeBox.ClearTextOnFocus = false
+	timeBox.TextXAlignment = Enum.TextXAlignment.Left
+	timeBox.Parent = timeInputContainer
+
+	-- Container da key gerada
+	local generatedKeyContainer = Instance.new("Frame")
+	generatedKeyContainer.Size = UDim2.new(0, 440, 0, 50)
+	generatedKeyContainer.Position = UDim2.new(0.5, -220, 0, 120)
+	generatedKeyContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+	generatedKeyContainer.BorderSizePixel = 0
+	generatedKeyContainer.Parent = createPage
+
+	local generatedKeyCorner = Instance.new("UICorner")
+	generatedKeyCorner.CornerRadius = UDim.new(0, 12)
+	generatedKeyCorner.Parent = generatedKeyContainer
+
+	local generatedKeyStroke = Instance.new("UIStroke")
+	generatedKeyStroke.Color = Color3.fromRGB(0, 255, 100)
+	generatedKeyStroke.Thickness = 2
+	generatedKeyStroke.Parent = generatedKeyContainer
+
+	-- TextBox para mostrar a key gerada
+	local generatedKeyBox = Instance.new("TextBox")
+	generatedKeyBox.Name = "GeneratedKey"
+	generatedKeyBox.Size = UDim2.new(1, -20, 1, 0)
+	generatedKeyBox.Position = UDim2.new(0, 10, 0, 0)
+	generatedKeyBox.PlaceholderText = "A key aparecerá aqui..."
+	generatedKeyBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 120)
+	generatedKeyBox.Text = ""
+	generatedKeyBox.BackgroundTransparency = 1
+	generatedKeyBox.TextColor3 = Color3.fromRGB(0, 255, 150)
+	generatedKeyBox.Font = Enum.Font.GothamBold
+	generatedKeyBox.TextSize = 16
+	generatedKeyBox.ClearTextOnFocus = false
+	generatedKeyBox.TextXAlignment = Enum.TextXAlignment.Center
+	generatedKeyBox.TextEditable = false
+	generatedKeyBox.Parent = generatedKeyContainer
+
+	-- Label de info
+	local infoLabel = Instance.new("TextLabel")
+	infoLabel.Size = UDim2.new(0, 440, 0, 40)
+	infoLabel.Position = UDim2.new(0.5, -220, 0, 180)
+	infoLabel.Text = ""
+	infoLabel.BackgroundTransparency = 1
+	infoLabel.TextColor3 = Color3.fromRGB(150, 150, 170)
+	infoLabel.Font = Enum.Font.Gotham
+	infoLabel.TextSize = 11
+	infoLabel.TextWrapped = true
+	infoLabel.Parent = createPage
+
+	-- Botão gerar key
+	local generateBtn = Instance.new("TextButton")
+	generateBtn.Size = UDim2.new(0, 200, 0, 50)
+	generateBtn.Position = UDim2.new(0.5, -100, 1, -65)
+	generateBtn.Text = "🔑 GERAR KEY"
+	generateBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+	generateBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	generateBtn.Font = Enum.Font.GothamBold
+	generateBtn.TextSize = 14
+	generateBtn.BorderSizePixel = 0
+	generateBtn.Parent = createPage
+
+	local generateCorner = Instance.new("UICorner")
+	generateCorner.CornerRadius = UDim.new(0, 12)
+	generateCorner.Parent = generateBtn
+
+	generateBtn.MouseEnter:Connect(function()
+		generateBtn.BackgroundColor3 = Color3.fromRGB(20, 220, 120)
 	end)
 
-	createBtn.MouseButton1Click:Connect(function()
-		local newKey = generateKey()
-		validKeys[newKey] = true
+	generateBtn.MouseLeave:Connect(function()
+		generateBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+	end)
 
-		keyLabel.Text = "✅ Key Gerada: " .. newKey
-		notify(player.Name, "Key criada com sucesso! 🔥", Color3.fromRGB(0, 255, 100))
+	-- Ação de gerar key
+	generateBtn.MouseButton1Click:Connect(function()
+		local timeText = timeBox.Text
+		local minutes = tonumber(timeText) or 60
 		
+		if minutes < 0 then
+			minutes = 0
+		end
+		
+		local newKey = generateKey()
+		local expirationTime = 0
+		
+		if minutes > 0 then
+			expirationTime = os.time() + (minutes * 60)
+			infoLabel.Text = "⏰ Esta key expira em " .. minutes .. " minuto(s)"
+		else
+			expirationTime = 0
+			infoLabel.Text = "♾️ Esta key nunca expira"
+		end
+		
+		validKeys[newKey] = {expires = expirationTime}
+		
+		generatedKeyBox.Text = newKey
+		notify(player.Name, "Key criada com sucesso! 🔥", Color3.fromRGB(0, 255, 100))
+		soundSuccess:Play()
+		
+		-- Copiar automaticamente se possível
 		if setclipboard then
 			setclipboard(newKey)
 			notify(player.Name, "Key copiada! 📋", Color3.fromRGB(100, 200, 255))
 		end
-		
-		box.Text = newKey
 	end)
+else
+	-- Mensagem para quem não pode criar keys
+	local noAccessLabel = Instance.new("TextLabel")
+	noAccessLabel.Size = UDim2.new(1, -60, 1, -60)
+	noAccessLabel.Position = UDim2.new(0, 30, 0, 30)
+	noAccessLabel.Text = "🔒 Você não tem permissão para criar keys.\n\nApenas usuários autorizados podem acessar esta função."
+	noAccessLabel.BackgroundTransparency = 1
+	noAccessLabel.TextColor3 = Color3.fromRGB(200, 100, 100)
+	noAccessLabel.Font = Enum.Font.GothamBold
+	noAccessLabel.TextSize = 14
+	noAccessLabel.TextWrapped = true
+	noAccessLabel.Parent = createPage
 end
+
+-- Sistema de trocar abas
+loginTab.MouseButton1Click:Connect(function()
+	loginPage.Visible = true
+	createPage.Visible = false
+	
+	loginTab.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+	loginTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+	
+	createTab.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+	createTab.TextColor3 = Color3.fromRGB(150, 150, 170)
+	
+	subtitle.Text = "Insira sua key de acesso"
+end)
+
+createTab.MouseButton1Click:Connect(function()
+	loginPage.Visible = false
+	createPage.Visible = true
+	
+	createTab.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+	createTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+	
+	loginTab.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+	loginTab.TextColor3 = Color3.fromRGB(150, 150, 170)
+	
+	subtitle.Text = "Gere keys personalizadas"
+end)
 
 -- Botão fechar
 local close = Instance.new("TextButton")
@@ -753,17 +956,36 @@ close.MouseButton1Click:Connect(function()
 	gui:Destroy()
 end)
 
--- VALIDAÇÃO
+-- VALIDAÇÃO DE KEY COM VERIFICAÇÃO DE EXPIRAÇÃO
 btn.MouseButton1Click:Connect(function()
 	local inputText = box.Text
 	print("Tentando validar key:", inputText)
 	
 	if validKeys[inputText] then
+		local keyData = validKeys[inputText]
+		local currentTime = os.time()
+		
+		-- Verificar se a key expirou
+		if keyData.expires > 0 and currentTime > keyData.expires then
+			print("Key expirada!")
+			notify(player.Name, "Esta key já expirou! ⏰", Color3.fromRGB(255, 150, 0))
+			return
+		end
+		
 		print("Key válida!")
 		active = true
-		startTime = os.time()
-
-		notify(player.Name, "Acesso liberado! 🚀", Color3.fromRGB(0, 255, 100))
+		startTime = currentTime
+		currentKeyExpiration = keyData.expires
+		
+		-- Calcular tempo restante
+		if keyData.expires > 0 then
+			local timeLeft = keyData.expires - currentTime
+			local minutesLeft = math.floor(timeLeft / 60)
+			notify(player.Name, "Acesso liberado por " .. minutesLeft .. " minuto(s)! 🚀", Color3.fromRGB(0, 255, 100))
+		else
+			notify(player.Name, "Acesso liberado permanentemente! 🚀", Color3.fromRGB(0, 255, 100))
+		end
+		
 		soundSuccess:Play()
 		
 		gui:Destroy()
@@ -775,7 +997,7 @@ btn.MouseButton1Click:Connect(function()
 		-- Shake effect
 		local original = frame.Position
 		for i = 1, 6 do
-			frame.Position = UDim2.new(0.5, -210 + math.random(-10, 10), 0.5, -140)
+			frame.Position = UDim2.new(0.5, -250 + math.random(-10, 10), 0.5, -200)
 			task.wait(0.05)
 		end
 		frame.Position = original
@@ -791,14 +1013,26 @@ end)
 
 print("GUI totalmente criado! Deveria estar visível agora.")
 
--- Expiração
+-- Expiração baseada no tempo da key
 task.spawn(function()
 	while true do
 		task.wait(10)
-		if active and (os.time() - startTime > EXPIRATION_TIME) then
-			active = false
-			notify(player.Name, "Sua key expirou! ⏳", Color3.fromRGB(255, 150, 0))
-			stopSpectate()
+		if active then
+			local currentTime = os.time()
+			
+			-- Se a key tem expiração (não é 0)
+			if currentKeyExpiration > 0 then
+				if currentTime > currentKeyExpiration then
+					active = false
+					notify(player.Name, "Sua key expirou! ⏳", Color3.fromRGB(255, 150, 0))
+					stopSpectate()
+					
+					-- Fechar painel de staff
+					if playerGui:FindFirstChild("StaffPanel") then
+						playerGui.StaffPanel:Destroy()
+					end
+				end
+			end
 		end
 	end
 end)
