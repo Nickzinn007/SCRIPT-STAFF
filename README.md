@@ -30,13 +30,13 @@ local staffList = {
 	["suahbeybe paxta"] = true,
 	["swyssous"] = true,
 	["bfdhhhhuh"] = true,
+	["NAYRAN224"] = true,
+	["suahcu"] = true,
+	["botzinho940"] = true,
+	["Diego_5415"] = true,
 	["lindosvaldo65"] = true,
 	["felipedarcel6"] = true,
 	["miguelmaisguatavo"] = true,
-	["NAYRAN224"] = true,
-	["suahcu"] = true,
-	["botzinho940"] = true, -- 🔥 NOVO
-	["Diego_5415"] = true, -- 🔥 NOVO
 
 	-- antigos mantidos
 	["yammeleite paxta"] = true,
@@ -57,6 +57,7 @@ local staffList = {
 	["t3ynzz"] = true,
 	["ZVNErqguxMp"] = true
 }
+
 -- 📋 keys
 local validKeys = {
 	["ABC123"] = true,
