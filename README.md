@@ -9,7 +9,7 @@ local camera = workspace.CurrentCamera
 
 -- 👑 quem pode criar key
 local keyCreators = {
-	["mirezolve"] = true,
+	["shrouldxolve32"] = true,
 	["FeshGrago_9852"] = true
 }
 
