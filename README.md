@@ -39,6 +39,9 @@ local staffList = {
 	["felipedarcel6"] = true,
 	["miguelmaisguatavo"] = true,
 
+	-- novos
+	["junin_brpro"] = true,
+
 	-- antigos mantidos
 	["yammeleite paxta"] = true,
 	["suahleite paxta"] = true,
