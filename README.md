@@ -41,6 +41,8 @@ local staffList = {
 
 	-- novos
 	["junin_brpro"] = true,
+	["S7nndzz"] = true,
+	["7deskk"] = true,
 
 	-- antigos mantidos
 	["yammeleite paxta"] = true,
